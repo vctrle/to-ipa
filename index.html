@@ -1,0 +1,240 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vietnamese to IPA Converter</title>
+    <style>
+		body, textarea, select {
+			font-size: 1.2rem;
+			font-family: Arial;
+		}
+		body {
+			max-width: 36em;
+			padding: 1em;
+			margin: auto;
+		}
+		@media (max-width: 600px) {
+			html {
+				padding: 2em 0em;
+				max-width: 96%;
+			}
+		}
+        #result {
+            font-family: monospace;
+        }
+        #result span {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <h1>Vietnamese to IPA Converter</h1>
+    <label for="dialect">Select Dialect:</label>
+    <select id="dialect" onchange="convertToIPA()">
+        <option value="north">Northern accent</option>
+        <option value="south">Southern accent</option>
+    </select>
+    <br><br>
+    <textarea id="inputText" rows="10" style="width: 96%" placeholder="Enter Vietnamese text here..." oninput="convertToIPA()"></textarea>
+    <br><br>
+    <div id="result"></div>
+
+    <script>
+        const toneMap = {
+            'á': 'a', 'ắ': 'ă', 'ấ': 'â', 'é': 'e', 'ế': 'ê', 'í': 'i', 'ó': 'o', 'ố': 'ô', 'ớ': 'ơ', 'ú': 'u', 'ứ': 'ư', 'ý': 'y',
+            'à': 'a', 'ằ': 'ă', 'ầ': 'â', 'è': 'e', 'ề': 'ê', 'ì': 'i', 'ò': 'o', 'ồ': 'ô', 'ờ': 'ơ', 'ù': 'u', 'ừ': 'ư', 'ỳ': 'y',
+            'ả': 'a', 'ẳ': 'ă', 'ẩ': 'â', 'ẻ': 'e', 'ể': 'ê', 'ỉ': 'i', 'ỏ': 'o', 'ổ': 'ô', 'ở': 'ơ', 'ủ': 'u', 'ử': 'ư', 'ỷ': 'y',
+            'ã': 'a', 'ẵ': 'ă', 'ẫ': 'â', 'ẽ': 'e', 'ễ': 'ê', 'ĩ': 'i', 'õ': 'o', 'ỗ': 'ô', 'ỡ': 'ơ', 'ũ': 'u', 'ữ': 'ư', 'ỹ': 'y',
+            'ạ': 'a', 'ặ': 'ă', 'ậ': 'â', 'ẹ': 'e', 'ệ': 'ê', 'ị': 'i', 'ọ': 'o', 'ộ': 'ô', 'ợ': 'ơ', 'ụ': 'u', 'ự': 'ư', 'ỵ': 'y'
+        };
+
+        const northernConsonants = {
+            'b': 'ɓ', 'd': 'z', 'h': 'h', 'l': 'l', 'm': 'm', 'n': 'n', 'p': 'p', 'r': 'z', 's': 's', 't': 't', 'v': 'v', 'x': 'x', 'đ': 'ɗ', 'tr': 'tɕ', 'th': 'tʰ', 'ch': 'tɕ', 'ph': 'f', 'nh': 'ɲ', 'kh': 'x', 'gi': 'z', 'qu': 'kʷ', 'ng': 'ŋ', 'ngh': 'ŋ', 'g': 'ɣ', 'gh': 'ɣ', 'c': 'k', 'k': 'k'
+        };
+
+        const southernConsonants = {
+            'b': 'ɓ', 'd': 'j', 'h': 'h', 'l': 'l', 'm': 'm', 'n': 'n', 'p': 'p', 'r': 'r', 's': 'ʂ', 't': 't', 'v': 'j', 'x': 'x', 'đ': 'ɗ', 'tr': 'ʈ', 'th': 'tʰ', 'ch': 'c', 'ph': 'f', 'nh': 'ɲ', 'kh': 'x', 'gi': 'j', 'qu': 'w', 'ng': 'ŋ', 'ngh': 'ŋ', 'g': 'ɣ', 'gh': 'ɣ', 'c': 'k', 'k': 'k'
+        };
+
+        const northernVowels = {
+            'a': 'a', 'ă': 'ă', 'â': 'ə̆', 'e': 'ɛ', 'ê': 'e', 'i': 'i', 'o': 'ɔ', 'ô': 'o', 'ơ': 'ə', 'u': 'u', 'ư': 'ɨ', 'y': 'i', 'iê': 'iə̆', 'oa': 'ʷa', 'oă': 'ʷă', 'oe': 'ʷɛ', 'oo': 'ɔ', 'ôô': 'o', 'uâ': 'ʷə̆', 'uê': 'ʷe', 'uô': 'uə̆', 'uy': 'ʷi', 'ươ': 'ɨə̆', 'uyê': 'ʷiə̆', 'yê': 'iə̆'
+        };
+
+        const southernVowels = {
+            'a': 'a', 'ă': 'ă', 'â': 'ə̆', 'e': 'ɛ', 'ê': 'e', 'i': 'i', 'o': 'ɔ', 'ô': 'o', 'ơ': 'ə', 'u': 'u', 'ư': 'ɨ', 'y': 'i', 'iê': 'i', 'oa': 'ʷa', 'oă': 'ʷă', 'oe': 'ʷɛ', 'oo': 'ɔ', 'ôô': 'o', 'uâ': 'ʷɨ', 'uê': 'ʷe', 'uô': 'u', 'uy': 'ʷi', 'ươ': 'ɨ', 'uyê': 'ʷi', 'yê': 'i'
+        };
+
+        const northernFinals = {
+            'a': 'ə̆', 'i': 'j', 'o': 'w', 'u': 'w', 'y': 'j', 'm': 'm', 'n': 'n', 'ng': 'ŋ', 'nh': 'n', 'ch': 't', 'c': 'k', 't': 'k', 'p': 'p'
+        };
+
+        const southernFinals = {
+            'a': 'ə̆', 'i': 'j', 'o': 'w', 'u': 'w', 'y': 'j', 'm': 'm', 'n': 'ŋ', 'ng': 'ŋ', 'nh': 'n', 'ch': 't', 'c': 'k', 't': 'k', 'p': 'p'
+        };
+
+        const northernExceptions = {
+            'aw': 'ăw', 'ay': 'ăj', 'anh': 'ăjŋ', 'ach': 'ăjk', 'ênh': 'ə̆jŋ', 'êch': 'ə̆jk', 'ong': 'ăwŋ͡m', 'ông': 'ə̆wŋ͡m', 'oc': 'ăwk͡p', 'ôc': 'ə̆wk͡p', 'ung': 'uŋ͡m', 'uc': 'uk͡p', 'oay': 'ʷăj', 'oanh': 'ʷăjŋ', 'oach': 'ʷăjk', 'uênh': 'ʷə̆jŋ', 'uêch': 'ʷə̆jk'
+        };
+
+        const southernExceptions = {
+            'aw': 'ăw', 'ay': 'ăj', 'anh': 'ăn', 'ach': 'ăt', 'ên': 'ən', 'êng': 'ən', 'êch': 'ət', 'êc': 'ət', 'in': 'ɨn', 'inh': 'ɨn', 'ich': 'ɨt', 'ic': 'ɨt', 'ong': 'ăwŋ͡m', 'ông': 'ə̆wŋ͡m', 'oc': 'ăwk͡p', 'ôc': 'ə̆wk͡p', 'ung': 'uŋ͡m', 'uc': 'uk͡p', 'oay': 'ʷăj', 'oanh': 'ʷăn', 'oach': 'ʷăt', 'uênh': 'ʷən', 'uêch': 'ʷət', "uyn": "ʷɨn", "uynh": "ʷɨn", "uych": "ʷɨt", "uyt": "ʷɨt"
+        };
+
+        const northernToneMarkers = {
+            1: '˧',
+            2: '˧˥',
+            3: '˨˩',
+            4: '˧˩˧',
+            5: '˧ˀ˦˥',
+            6: '˨˩ˀ'
+        };
+
+        const southernToneMarkers = {
+            1: '˧',
+            2: '˧˥',
+            3: '˨˩',
+            4: '˨˩˦',
+            5: '˨˩˦',
+            6: '˨˩˨'
+        };
+
+        function getTone(syllable) {
+            for (let char of syllable) {
+                if (toneMap[char]) {
+                    const toneIndex = Object.keys(toneMap).indexOf(char);
+                    return Math.floor(toneIndex / 12) + 2;
+                }
+            }
+            return 1;
+        }
+
+        function normalizeVowel(syllable) {
+            let normalized = "";
+            for (let char of syllable) {
+                normalized += toneMap[char] || char;
+            }
+            return normalized;
+        }
+
+        function convertConsonant(consonant, dialect) {
+            const consonants = dialect === "north" ? northernConsonants : southernConsonants;
+            return consonants[consonant] || "";
+        }
+
+        function convertVowel(vowel, dialect) {
+            const vowels = dialect === "north" ? northernVowels : southernVowels;
+            return vowels[vowel] || vowel;
+        }
+
+        function convertFinal(final, dialect) {
+            const finals = dialect === "north" ? northernFinals : southernFinals;
+            return finals[final] || final;
+        }
+
+        function convertException(vowel, final, dialect) {
+            const exceptions = dialect === "north" ? northernExceptions : southernExceptions;
+            return exceptions[vowel + final] || null;
+        }
+
+        function convertTone(tone, dialect) {
+            const toneMarkers = dialect === "north" ? northernToneMarkers : southernToneMarkers;
+            return toneMarkers[tone];
+        }
+		
+		function modifySemivowel(consonant, vowelIPA) {
+			if (consonant === "" && vowelIPA.includes('ʷ')) {
+				return vowelIPA.replace('ʷ', 'w');
+			}
+			return vowelIPA;
+		}
+		
+        function splitSyllable(syllable) {
+            let consonant = "";
+            let vowelFinal = syllable;
+            for (let i = syllable.length; i > 0; i--) {
+                const possibleConsonant = syllable.slice(0, i).toLowerCase();
+                if (northernConsonants[possibleConsonant] || southernConsonants[possibleConsonant]) {
+                    consonant = possibleConsonant;
+                    vowelFinal = syllable.slice(i);
+                    break;
+                }
+            }
+
+            let vowel = "";
+            let final = "";
+            for (let i = vowelFinal.length; i > 0; i--) {
+                const possibleVowel = vowelFinal.slice(0, i).toLowerCase();
+                if (northernVowels[possibleVowel] || southernVowels[possibleVowel]) {
+                    vowel = possibleVowel;
+                    final = vowelFinal.slice(i);
+                    break;
+                }
+            }
+
+            return { consonant, vowel, final };
+        }
+		
+		function handleLineBreaks(text) {
+			return text.replace(/\n/g, '<br>');
+		}
+		
+		function convertToIPA() {
+			let inputText = document.getElementById('inputText').value.toLowerCase();
+			inputText = removePunctuation(inputText); // Remove punctuation before processing
+			const dialect = document.getElementById('dialect').value;
+			const resultDiv = document.getElementById('result');
+			let resultHTML = "";
+
+			const lines = inputText.split('\n');
+			lines.forEach(line => {
+				const syllables = line.split(/\s+/);
+				syllables.forEach(syllable => {
+					if (!syllable) return;
+
+					const tone = getTone(syllable);
+					const normalizedSyllable = normalizeVowel(syllable);
+					const { consonant, vowel, final } = splitSyllable(normalizedSyllable);
+
+					let ipaConsonant = convertConsonant(consonant, dialect);
+					let ipaVowel = convertVowel(vowel, dialect);
+					ipaVowel = modifySemivowel(consonant, ipaVowel); // Apply the new rule here
+					let ipaFinal = convertFinal(final, dialect);
+
+					const exception = convertException(vowel, final, dialect);
+					if (exception) {
+						ipaVowel = exception;
+						ipaFinal = "";
+					}
+
+					const ipaTone = convertTone(tone, dialect);
+
+					if (!ipaVowel) {
+						resultHTML += `<span>${syllable}</span> `;
+					} else {
+						resultHTML += `${ipaConsonant}${ipaVowel}${ipaFinal}${ipaTone} `;
+					}
+				});
+				resultHTML += '<br>'; // Add line break after each line
+			});
+
+			resultDiv.innerHTML = resultHTML.trim(); // Remove trailing whitespace
+		}
+
+		document.getElementById('inputText').addEventListener('input', convertToIPA);
+		document.getElementById('dialect').addEventListener('change', convertToIPA);
+
+		function removePunctuation(text) {
+			return text.replace(/[.,:;()\[\]{}?!“”‘’'"\/\\\-]/g, '');
+		}
+
+		function modifySemivowel(consonant, vowelIPA) {
+			if (consonant === "" && vowelIPA.includes('ʷ')) {
+				return vowelIPA.replace('ʷ', 'w');
+			}
+			return vowelIPA;
+		}
+    </script>
+</body>
+</html>
