@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Burmese to IPA Converter</title>
+    <style>
+		body, textarea, select {
+			font-size: 1.2rem;
+			font-family: Arial;
+		}
+		body {
+			max-width: 36em;
+			padding: 1em;
+			margin: auto;
+		}
+		@media (max-width: 600px) {
+			html {
+				padding: 2em 0em;
+				max-width: 96%;
+			}
+		}
+        #result {
+            font-family: monospace;
+        }
+        #result span {
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Burmese to IPA Converter</h1>
+
+    <br><br>
+    <textarea id="inputText" rows="10" style="width: 96%" placeholder="Conversion assumes that all pronunciation is regular. Enter Burmese text here..." oninput="convertToIPA()"></textarea>
+    <br><br>
+    <div id="result"></div>
+
+    <script>
+
+
+
+const consonant1Map = {
+    "က": "k", "ခ": "kʰ", "ဂ": "ɡ", "ဃ": "ɡ", "င": "ŋ",
+    "စ": "s", "ဆ": "sʰ", "ဇ": "z", "ဈ": "z", "ဉ": "ɲ", "ည": "ɲ",
+    "ဋ": "t", "ဌ": "tʰ", "ဍ": "d", "ဎ": "d", "ဏ": "n",
+    "တ": "t", "ထ": "tʰ", "ဒ": "d", "ဓ": "d", "န": "n",
+    "ပ": "p", "ဖ": "pʰ", "ဗ": "b", "ဘ": "b", "မ": "m",
+    "ယ": "j", "ရ": "j", "လ": "l", "ဝ": "w", "သ": "θ", "ဿ": "θ", "ဟ": "h", "ဠ": "l", "အ": "ʔ",
+    "ကျ": "tɕ", "ချ": "tɕʰ", "ဂျ": "dʑ", "သျှ": "ʃ", "လျှ": "ʃ",
+    "ကြ": "tɕ", "ခြ": "tɕʰ", "ဂြ": "dʑ", "ငြ": "ɲ", "ဝှ": "ʍ",
+    "ယှ": "ʃ", "ရှ": "ʃ"
+};
+
+const consonant2Map = {
+    "ှ": "̥", "ျ": "j", "ျှ": "̥j", "ျွ": "j", "ျွှ": "̥w",
+    "ြ": "j", "ြှ": "̥j", "ြွ": "w", "ြွှ": "̥w",
+    "ွ": "w", "ွှ": "̥w"
+};
+
+const vowelMap = {
+    "ာ": "à.", "ား": "á.", "တ်": "aʔ.", "ပ်": "aʔ.",
+    "န့်": "a̰ɴ.", "မ့်": "a̰ɴ.", "ံ့": "a̰ɴ.", "န်": "àɴ.", "မ်": "àɴ.", "ံ": "àɴ.",
+    "န်း": "áɴ.", "မ်း": "áɴ.", "ံး": "áɴ.", "ည့်": "ည့်.", "ဲ့": "ɛ̰.", "ည်": "ည်.",
+    "ယ်": "ɛ̀.", "ည်း": "ညး.", "ဲ": "ɛ́.", "က်": "ɛʔ.", "ိုင့်": "a̰ɪɴ.", "ိုင်": "àɪɴ.",
+    "ိုင်း": "áɪɴ.", "ိုက်": "aɪʔ.", "ိ": "ḭ.", "ီ": "ì.", "ီး": "í.", "စ်": "iʔ.",
+    "င့်": "ɪ̰ɴ.", "ဉ့်": "ɪ̰ɴ.", "င်": "ɪ̀ɴ.", "ဉ်": "ɪ̀ɴ.", "င်း": "ɪ́ɴ.", "ဉ်း": "ɪ́ɴ.",
+    "ော့": "ɔ̰.", "ော်": "ɔ̀.", "ော": "ɔ́.", "ောင့်": "a̰ʊɴ.", "ောင်": "àʊɴ.", "ောင်း": "áʊɴ.",
+    "ောက်": "aʊʔ.", "ု": "ṵ.", "ူ": "ù.", "ူး": "ú.", "ွတ်": "uʔ.", "ွပ်": "uʔ.",
+    "ွန့်": "ʊ̰ɴ.", "ွမ့်": "ʊ̰ɴ.", "ွန်": "ʊ̀ɴ.", "ွမ်": "ʊ̀ɴ.", "ွန်း": "ʊ́ɴ.", "ွမ်း": "ʊ́ɴ.",
+    "ေ့": "ḛ.", "ေ": "è.", "ေး": "é.", "ိန့်": "ḛɪɴ.", "ိမ့်": "ḛɪɴ.", "ိံ့": "ḛɪɴ.",
+    "ိန်": "èɪɴ.", "ိမ်": "èɪɴ.", "ိံ": "èɪɴ.", "ိန်း": "éɪɴ.", "ိမ်း": "éɪɴ.",
+    "ိံး": "éɪɴ.", "ိတ်": "eʔ.", "ိပ်": "eʔ.", "ို့": "o̰.", "ို": "ò.", "ိုး": "ó.",
+    "ုန့်": "o̰ʊɴ.", "ုမ့်": "o̰ʊɴ.", "ုံ့": "o̰ʊɴ.", "ုန်": "òʊɴ.", "ုမ်": "òʊɴ.",
+    "ုံ": "òʊɴ.", "ုန်း": "óʊɴ.", "ုမ်း": "óʊɴ.", "ုံး": "óʊɴ.", "ုတ်": "oʊʔ.",
+    "ုပ်": "oʊʔ.", "ါ": "à.", "ါး": "á.", "ေါ့": "ɔ̰.", "ေါ်": "ɔ̀.", "ေါ": "ɔ́.",
+    "ေါင့်": "a̰ʊɴ.", "ေါင်": "àʊɴ.", "ေါင်း": "áʊɴ.", "ေါက်": "aʊʔ.", "ာက်": "ɛʔ.",
+    "ိက်": "eɪʔ.", "ုက်": "oʊʔ.", "ါက်": "ɛʔ.", "ုခ်": "oʊʔ.", "ဂ်": "ɛʔ.", "ိဂ်": "eɪʔ.",
+    "ုဂ်": "oʊʔ.", "ောဂ်": "auʔ.", "ေါဂ်": "auʔ.", "ိုဃ်": "oʊ.", "ိင်": "èɪɴ.", "ာစ်": "iʔ.",
+    "ိစ်": "eɪʔ.", "ုစ်": "oʊʔ.", "ါစ်": "iʔ.", "ဇ်": "iʔ.", "ာဇ်": "iʔ.", "ိဇ်": "eɪʔ.",
+    "ောဇ်": "uʔ.", "ိုဇ်": "aiʔ.", "ါဇ်": "iʔ.", "ေါဇ်": "uʔ.", "ုည်": "òʊɴ.", "ေည်": "ìɴ.",
+    "ာဉ်": "ìɴ.", "ိဉ်": "èɪɴ.", "ုဉ်": "òʊɴ.", "ေဉ်": "ìɴ.", "ါဉ်": "ìɴ.", "ဋ်": "aʔ.",
+    "ိဋ်": "eɪʔ.", "ုဋ်": "oʊʔ.", "ေဋ်": "iʔ.", "ိုဋ်": "aiʔ.", "ဌ်": "aʔ.", "ာဌ်": "aʔ.",
+    "ိဌ်": "eɪʔ.", "ုဌ်": "oʊʔ.", "ေဌ်": "iʔ.", "ိုဌ်": "aiʔ.", "ါဌ်": "aʔ.", "ဍ်": "aʔ.",
+    "ုဍ်": "oʊʔ.", "ဏ်": "àɴ.", "ာဏ်": "àɴ.", "ိဏ်": "èɪɴ.", "ုဏ်": "òʊɴ.", "ိုဏ်": "àɪɴ.",
+    "ါဏ်": "àɴ.", "ာတ်": "aʔ.", "ေတ်": "iʔ.", "ောတ်": "uʔ.", "ိုတ်": "aiʔ.", "ါတ်": "aʔ.",
+    "ေါတ်": "uʔ.", "ုထ်": "oʊʔ.", "ိုထ်": "aiʔ.", "ဒ်": "aʔ.", "ာဒ်": "aʔ.", "ိဒ်": "eɪʔ.",
+    "ုဒ်": "oʊʔ.", "ိုဒ်": "aiʔ.", "ါဒ်": "aʔ.", "ဓ်": "aʔ.", "ာဓ်": "aʔ.", "ိဓ်": "eɪʔ.",
+    "ုဓ်": "oʊʔ.", "ါဓ်": "aʔ.", "ာန်": "àɴ.", "ါန်": "àɴ.", "ာပ်": "aʔ.", "ါပ်": "aʔ.",
+    "ဗ်": "aʔ.", "ိဗ်": "eɪʔ.", "ုဗ်": "oʊʔ.", "ာယ်": "ɛ̀.", "ိယ်": "ì.", "ုယ်": "ù.",
+    "ေယ်": "ɛ̀.", "ောယ်": "ɔ̀.", "ိုယ်": "ò.", "ါယ်": "ɛ̀.", "ေါယ်": "ɔ̀.", "ရ်": "àɴ.",
+    "ာရ်": "àɴ.", "ိရ်": "èɪɴ.", "ေရ်": "ɛ̀.", "ိုရ်": "ò.", "ါရ်": "àɴ.", "လ်": "àɴ.",
+    "ာလ်": "àɴ.", "ိလ်": "èɪɴ.", "ုလ်": "òʊɴ.", "ိုလ်": "ò.", "ါလ်": "àɴ.", "ဝ်": "ɔ̀.",
+    "သ်": "aʔ.", "ာသ်": "aʔ.", "ိသ်": "eɪʔ.", "ုသ်": "oʊʔ.", "ါသ်": "aʔ.", "ိဟ်": "èɪɴ.",
+    "ိုဟ်": "ò.", "ဠ်": "àɴ.", "ာဠ်": "àɴ.", "ိဠ်": "èɪɴ.", "ုဠ်": "òʊɴ.", "ါဠ်": "àɴ."
+};
+
+const standaloneSyllableMap = {
+    "ဣ": "ʔḭ.", "ဤ": "ʔì.", "ဥ": "ʔṵ.", "ဦ": "ʔù.", "ဧ": "ʔè.", "ဩ": "ʔɔ́.",
+    "ဪ": "ʔɔ̀.", "၏": "ʔḭ.", "၍": "jwḛ.", "၌": "n̥aɪʔ.", "၎င်း": "lə.ɡáʊɴ."
+};
+
+const conversion = { ...consonant1Map, ...consonant2Map, ...vowelMap, ...standaloneSyllableMap };
+
+const maxLength = Object.keys(conversion).reduce((a, b) => a.length > b.length ? a : b).length;
+
+function convert(text) {
+    let converted = "";
+    let cur = 0;
+    while (cur < text.length) {
+        let testedPhoneme;
+        let symbol = undefined;
+        for (let length = maxLength; length > 0; length--) {
+            testedPhoneme = text.substr(cur, length);
+            if (conversion[testedPhoneme]) {
+                symbol = conversion[testedPhoneme];
+                break;
+            }
+        }
+        if (symbol) {
+            converted += symbol;
+            cur += testedPhoneme.length;
+        } else {
+            converted += text[cur];
+            cur++;
+        }
+    }
+    return converted;
+}
+
+function convertToIPA() {
+    let text = document.getElementById('inputText').value;
+    
+	// Step 1-1: Replace "္" with "်", except for "င်္"
+	text = text.replace(/င်္/g, 'င်').replace(/ဿ/g, 'သ်သ').replace(/္/g, '်');
+
+	// Step 1-2: Detect standalone syllables
+	text = convert(text);
+
+	// Step 1-3: Detect all vowels, then detect all consonants, and assign default vowel to consonants not followed by a vowel
+	// First detect all vowels
+	for (let key in vowelMap) {
+		text = text.replace(new RegExp(key, 'g'), vowelMap[key]);
+	}
+
+	// Then detect all consonants and assign default vowel
+	text = text.replace(/([က-အ](?![ါ-ူ])[\u103B-\u103E]?)/g, function(match) {
+		// Check if the consonant is followed by a vowel or "်"
+		const nextChar = text.charAt(text.indexOf(match) + match.length);
+		if (!vowelMap[nextChar] && nextChar !== '်') {
+			return match + 'a̰.';
+		}
+		return match;
+	});
+	
+	// Final step: Handle "့" and "း" that are left unconverted
+	text = text.replace(/([a-zʔɪɛɔ̰̀́]+)(့|း)/g, function(match, p1, p2) {
+		// Remove any "̰", "̀", or "́" from the vowel
+		let cleanedVowel = p1.replace(/[̰̀́]/g, '');
+
+		// Add "̰" for "့" or "́" for "း" to the first letter of its IPA value
+		if (p2 === "့") {
+			return cleanedVowel.charAt(0) + "̰" + cleanedVowel.slice(1);
+		} else if (p2 === "း") {
+			return cleanedVowel.charAt(0) + "́" + cleanedVowel.slice(1);
+		}
+		return match;
+	});
+
+    document.getElementById('result').innerText = text;
+}
+
+</script>
+</body>
+</html>
