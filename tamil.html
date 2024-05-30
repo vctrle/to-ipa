@@ -28,8 +28,13 @@
 
 <body>
     <h1>Tamil to IPA Converter</h1>
-
-    <br>
+    <br><br>
+    <label for="mode">Select Mode:</label>
+    <select id="mode" onchange="modeSelect()">
+        <option value="mode1">Literary Tamil</option>
+        <option value="mode2">Spoken Tamil</option>
+    </select>
+    <br><br>
     <textarea id="inputArea" rows="10" style="width: 96%" placeholder="Enter Tamil text here..."></textarea>
     <br><br>
     <div id="outputArea"></div>
