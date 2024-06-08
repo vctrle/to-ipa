@@ -6,4 +6,6 @@
 
 [tamil](tamil)
 
+[faroese](faroese)
+
 ![c](contact.svg)
