@@ -28,16 +28,29 @@
 			font-family: monospace;
 	        }
 		.n1 {
-			color: #AA0;
+			color: #E0A;
 		}
 		.n2 {
-			color: #F08;
+			color: #0B0;
 		}
 		.n3 {
-			color: #6A0;
+			color: #0AE;
 		}
-		.irr {
-			color: #F70
+		.ir {
+			color: #90F;
+		}
+		.op {
+			color: #309;
+		}
+		.ab {
+			border: none;
+			background: none;
+			color: black;
+			font-family: monospace;
+			text-decoration: underline;
+			cursor: pointer;
+			font-size: 1.4em;
+			margin: 0;
 		}
     </style>
 </head>
@@ -47,15 +60,32 @@
     <textarea id="inputArea" rows="10" style="width: 96%" placeholder="Mark secondary stress (ˌ) by adding a comma behind letters.&#13;&#10;
 Clicking [Step 1.] will assign stress marks word initially by default and replace commas behind letters with secondary stress marks.
 E.g. a,a → ˈaˌa&#13;&#10;
-Replace primary stress marks (ˈ) if needed.&#13;&#10;
-Might not be accurate for non-native loan words."></textarea>
+Reposition primary stress marks (ˈ) if needed.&#13;&#10;
+Inaccuracies can possibly occur for non-native loan words."></textarea>
     <br>
 	<button onclick="processText()">Step 1. Assign stress</button>
 	<button id="convertButton">Step 2. Convert to IPA</button>
+    <button class="ab" onclick="insertText('á')">á</button>
+    <button class="ab" onclick="insertText('ð')">ð</button>
+    <button class="ab" onclick="insertText('í')">í</button>
+    <button class="ab" onclick="insertText('ó')">ó</button>
+    <button class="ab" onclick="insertText('ú')">ú</button>
+    <button class="ab" onclick="insertText('ý')">ý</button>
+    <button class="ab" onclick="insertText('æ')">æ</button>
+    <button class="ab" onclick="insertText('ø')">ø</button>
 	<br><br>
-    <div id="outputArea"><object data="contact.svg" 
-	type="image/svg+xml"></object><br><code>á æ ð é í ó ø ú ý</code></div>
+    <div id="outputArea"><object data="contact.svg" type="image/svg+xml"></object></div>
     <script>
+
+	function insertText(text) {
+		var textarea = document.getElementById('inputArea');
+		var start = textarea.selectionStart;
+		var end = textarea.selectionEnd;
+		var value = textarea.value;
+		textarea.value = value.substring(0, start) + text + value.substring(end);
+		textarea.selectionStart = textarea.selectionEnd = start + text.length;
+		textarea.focus();
+	}
 
 	function processText() {
 		let textArea = document.getElementById('inputArea');
@@ -76,6 +106,27 @@ Might not be accurate for non-native loan words."></textarea>
 
 	const conversionRulesList = [
 
+// IRREGULAR ⒤*⒥
+	{
+"hvussu":"⒤kussu⒥", "aftur":"⒤attur⒥", "eftir":"⒤ettir⒥", "lyft":"⒤lytt⒥", "hugna":"⒤hunna⒥", 
+"ella":"⒤illa⒥", "hjálp":"⒤jálp⒥", "hjart":"⒤jart⒥", "hjørt":"⒤hjørt⒥", "vilhjálmur":"⒤viljálmur⒥", 
+"løgdu":"⒤løddu⒥", "søgdu":"⒤søddu⒥", "dugdi":"⒤duddi⒥", "dugdu":"⒤duddu⒥", "plagdi":"⒤pladdi⒥", 
+"plagdu":"⒤pladdu⒥", "tinna":"⒤tidna⒥", "":"⒤⒥", "":"⒤⒥", "":"⒤⒥", 
+"":"⒤⒥", "":"⒤⒥", "":"⒤⒥", "":"⒤⒥", "":"⒤⒥", 
+"":"⒤⒥", "":"⒤⒥", "":"⒤⒥", "":"⒤⒥", "":"⒤⒥", 
+"":"⒤⒥", "":"⒤⒥", "":"⒤⒥", "":"⒤⒥", "":"⒤⒥", 
+
+// glide irreg.
+"æða":"⒤æva⒥", "røða":"⒤røva⒥", "støða":"⒤støva⒥", "lega":"⒤leva⒥", "tæga":"⒤tæva⒥", 
+"":"⒤⒥", "":"⒤⒥", "":"⒤⒥", "":"⒤⒥", "":"⒤⒥", 
+	},
+// OPTIONAL IRREGULAR ⒪*⒫
+	{
+"øða":"⒪øva⒫", "aftan":"⒪attan⒫", "bolli":"⒪bɔlːi⒫", "tinn":"⒪tidn⒫", "tern":"⒪tɛɹn⒫", 
+"torn":"⒪tɔɹn⒫", "":"⒪⒫", "":"⒪⒫", "":"⒪⒫", "":"⒪⒫", 
+"":"⒪⒫", "":"⒪⒫", "":"⒪⒫", "":"⒪⒫", "":"⒪⒫", 
+	},
+// SETUP
 	{
 "b":"❸b❹", "d":"❸d❹", "g":"❸g❹", "j":"❸j❹", "l":"❸l❹", "m":"❸m❹", "n":"❸n❹", "r":"❸r❹", "v":"❸v❹",
 "k":"❸k❹", "p":"❸p❹", "t":"❸t❹",
@@ -87,10 +138,11 @@ Might not be accurate for non-native loan words."></textarea>
 "a":"❶a❷", "á":"❶á❷", "e":"❶e❷", "i":"❶i❷", "í":"❶í❷", "o":"❶o❷", "ó":"❶ó❷", "u":"❶u❷", "ú":"❶ú❷", 
 "y":"❶y❷", "ý":"❶ý❷", "æ":"❶æ❷", "ø":"❶ø❷", "ei":"❶ei❷", "ey":"❶ey❷", "oy":"❶oy❷",
 	},
-	{
 
-	},
 // STRESS and VOWEL LENGTH
+	{
+"ˈ⒤":"⒤ˈ", "ˈ⒪":"⒪ˈ", "ˌ⒤":"⒤ˌ", "ˌ⒪":"⒪ˌ", 
+	},
 	{
 "ˈ❶*❷":"ˈ❶ⓐ*❷","ˌ❶*❷":"ˌ❶ⓑ*❷",
 	},
@@ -115,12 +167,12 @@ Might not be accurate for non-native loan words."></textarea>
 
 // GLIDE 
 	{
-// A surrounding past participle glide
+// "A" surrounding past participle glide
 // yes
-"❶a❷ð❶a❷❸n❹":"❶a❷❸/⑵j/❹❶a❷❸n❹", "❶a❷ð❶a❷❸r❹":"❶a❷❸/⑵j/❹❶a❷❸r❹", "❶a❷ð❶a❷❸r❹❶i❷":"❶a❷❸/⑵j/❹❶a❷❸r❹❶i❷",
+"❶a❷ð❶a❷":"❶a❷❸/⑵j/❹❶a❷", "❶a❷ð❶a❷❸n❹":"❶a❷❸/⑵j/❹❶a❷❸n❹", "❶a❷ð❶a❷❸r❹":"❶a❷❸/⑵j/❹❶a❷❸r❹", "❶a❷ð❶a❷❸r❹❶i❷":"❶a❷❸/⑵j/❹❶a❷❸r❹❶i❷",
 // no
-"❶a❷ð❶a❷❸n❹❸":"❶a❷❶a❷❸n❹❸", "❶a❷ð❶a❷❸r❹❸":"❶a❷❶a❷❸r❹❸", "❶a❷ð❶a❷❸r❹❶i❷❸":"❶a❷❶a❷❸r❹❶i❷❸",
-"❶a❷ð❶a❷❸n❹❶":"❶a❷❶a❷❸n❹❶", "❶a❷ð❶a❷❸r❹❶":"❶a❷❶a❷❸r❹❶", "❶a❷ð❶a❷❸r❹❶i❷❶":"❶a❷❶a❷❸r❹❶i❷❶",
+"❶a❷ð❶a❷❸":"❶a❷❶a❷❸", "❶a❷ð❶a❷❸n❹❸":"❶a❷❶a❷❸n❹❸", "❶a❷ð❶a❷❸r❹❸":"❶a❷❶a❷❸r❹❸", "❶a❷ð❶a❷❸r❹❶i❷❸":"❶a❷❶a❷❸r❹❶i❷❸",
+"❶a❷ð❶a❷❶":"❶a❷❶a❷❶", "❶a❷ð❶a❷❸n❹❶":"❶a❷❶a❷❸n❹❶", "❶a❷ð❶a❷❸r❹❶":"❶a❷❶a❷❸r❹❶", "❶a❷ð❶a❷❸r❹❶i❷❶":"❶a❷❶a❷❸r❹❶i❷❶",
 // consonant clusters
 "❸kl❹":"❸k❹❸l❹", "❸kr❹":"❸k❹❸r❹", "❸pl❹":"❸p❹❸l❹", "❸pr❹":"❸p❹❸r❹", "❸tr❹":"❸t❹❸r❹", 
 "❸kj❹":"❸k❹❸j❹", "❸tj❹":"❸t❹❸j❹", "❸sj❹":"❸s❹❸j❹", 
@@ -128,8 +180,10 @@ Might not be accurate for non-native loan words."></textarea>
 "❷❸g❹❶":"❷❶", "❷❸g❹":"❷", "❷❸g❹❸":"❷❸g❹❸", "❸g❹❸g❹":"❸g❹❸g❹", 
 // ð delete
 "ð":"",
-// -lig ligV ligC
-"❸l❹❶i❷❸g❹":"❸l❹❶/⑶i/❷❸j❹", "❸l❹❶i❷❸g❹❶":"❸l❹❶/⑶i/❷❸j❹❶", "❸l❹❶i❷❸g❹❸":"❸l❹❶i❷❸", 
+// -lig ligV ligC 
+"❸l❹❶i❷❸g❹":"❸l❹❶/⑶i/❷❸j❹", "❸l❹❶i❷❸g❹❶":"❸l❹❶/⑶i/❷❸j❹❶", "❸l❹❶i❷❸g❹❸":"❸l❹❶i❷❸g❹❸", 
+// igt ugt
+"❶i❷❸g❹❸t❹":"❶i❷❸t❹", "❶u❷❸g❹❸t❹":"❶u❷❸t❹", 
 	},
 	{
 // aa áa ea oa æa
@@ -148,13 +202,13 @@ Might not be accurate for non-native loan words."></textarea>
 "❶aⓐ❷❶u❷":"❶aⓐ❷❸ⓝ/v/❹❶/ʊ/❷", "❶áⓐ❷❶u❷":"❶áⓐ❷❸ⓝ/v/❹❶/ʊ/❷", "❶eⓐ❷❶u❷":"❶eⓐ❷❸ⓝ/v/❹❶/ʊ/❷", 
 "❶oⓐ❷❶u❷":"❶oⓐ❷❸ⓝ/v/❹❶/ʊ/❷", "❶æⓐ❷❶u❷":"❶æⓐ❷❸ⓝ/v/❹❶/ʊ/❷", "❶øⓐ❷❶u❷":"❶øⓐ❷❸ⓝ/v/❹❶/ʊ/❷",
 // STANDALONE DIPTHONGS -j -w
-"❶íⓐ❷":"❶íⓐ❷/j/", "❶íⓐ❷❶":"❶íⓐ❷❶", "❶íⓐ❷❸":"❶íⓐ❷❸", 
-"❶ýⓐ❷":"❶ýⓐ❷/j/", "❶ýⓐ❷❶":"❶ýⓐ❷❶", "❶ýⓐ❷❸":"❶ýⓐ❷❸", 
-"❶eiⓐ❷":"❶eiⓐ❷/j/", "❶eiⓐ❷❶":"❶eiⓐ❷❶", "❶eiⓐ❷❸":"❶eiⓐ❷❸", 
-"❶eyⓐ❷":"❶eyⓐ❷/j/", "❶eyⓐ❷❶":"❶eyⓐ❷❶", "❶eyⓐ❷❸":"❶eyⓐ❷❸", 
-"❶oyⓐ❷":"❶oyⓐ❷/j/", "❶oyⓐ❷❶":"❶oyⓐ❷❶", "❶oyⓐ❷❸":"❶oyⓐ❷❸", 
-"❶óⓐ❷":"❶óⓐ❷/w/", "❶óⓐ❷❶":"❶óⓐ❷❶", "❶óⓐ❷❸":"❶óⓐ❷❸", 
-"❶úⓐ❷":"❶úⓐ❷/w/", "❶úⓐ❷❶":"❶úⓐ❷❶", "❶úⓐ❷❸":"❶úⓐ❷❸", 
+"❶íⓐ❷":"❶íⓐ❷/⑴j/", "❶íⓐ❷❶":"❶íⓐ❷❶", "❶íⓐ❷❸":"❶íⓐ❷❸", 
+"❶ýⓐ❷":"❶ýⓐ❷/⑴j/", "❶ýⓐ❷❶":"❶ýⓐ❷❶", "❶ýⓐ❷❸":"❶ýⓐ❷❸", 
+"❶eiⓐ❷":"❶eiⓐ❷/⑴j/", "❶eiⓐ❷❶":"❶eiⓐ❷❶", "❶eiⓐ❷❸":"❶eiⓐ❷❸", 
+"❶eyⓐ❷":"❶eyⓐ❷/⑴j/", "❶eyⓐ❷❶":"❶eyⓐ❷❶", "❶eyⓐ❷❸":"❶eyⓐ❷❸", 
+"❶oyⓐ❷":"❶oyⓐ❷/⑴j/", "❶oyⓐ❷❶":"❶oyⓐ❷❶", "❶oyⓐ❷❸":"❶oyⓐ❷❸", 
+"❶óⓐ❷":"❶óⓐ❷/⑴w/", "❶óⓐ❷❶":"❶óⓐ❷❶", "❶óⓐ❷❸":"❶óⓐ❷❸", 
+"❶úⓐ❷":"❶úⓐ❷/⑴w/", "❶úⓐ❷❶":"❶úⓐ❷❶", "❶úⓐ❷❸":"❶úⓐ❷❸", 
 	},
 // VOWELS
 	{
@@ -280,38 +334,31 @@ Might not be accurate for non-native loan words."></textarea>
 // CONSONANTS
 
 	{
-// g
-"❷❸/k/❹❸/n/❹❶":"❷❸/⑵t/❹❸/⑵n/❹❶", // ?
+
 // h
-"❸/h/❹❸/v/❹":"❸/⑴kʰ/❹❸/v/❹",
+"❸/h/❹❸/v/❹":"❸/⑴kʰ/❹❸/⑴v/❹",
 "❸/h/❹❸/j/❹":"❸/⑴t͡ʃʰ/❹",
 // l
-"❶/ai/❷❸/l":"❶/ai/❷❸/⑴ʎ",
-"❶/ai/❷❸/l̥":"❶/ai/❷❸/⑴ʎ̥",
-"❶/ʊi/❷❸/l":"❶/ʊʏ/❷❸/⑴ʎ",
-"❶/ʊʏ/❷❸/l̥":"❶/ʊʏ/❷❸/⑴ʎ̥",
+"❶/ai/❷❸/l":"❶/⑴ai/❷❸/⑴ʎ",
+"❶/ai/❷❸/l̥":"❶/⑴ai/❷❸/⑴ʎ̥",
+"❶/ʊi/❷❸/l":"❶/⑴ʊʏ/❷❸/⑴ʎ",
+"❶/ʊʏ/❷❸/l̥":"❶/⑴ʊʏ/❷❸/⑴ʎ̥",
 "❸/l/❹❸/t͡ʃ":"❸/⑴ʎ/❹❸/t͡ʃ",
 "❸/l̥/❹❸/t͡ʃ":"❸/⑴ʎ̥/❹❸/t͡ʃ",
 // m
-"❸/m̥/❹❸/k/❹":"❸/⑴ŋ̊/❹❸/k/❹",
+"❸/m̥/❹❸/k/❹":"❸/⑴ŋ̊/❹❸/⑴k/❹",
 "❶/ʊ/❷❸/m/❹❶":"❶/ʊ/❷❸/m/❹❶",
 "❶/ʊ/❷❸/m/❹❸":"❶/ʊ/❷❸/m/❹❸",
-"❶/ʊ/❷❸/m/❹":"❶/ʊ/❷❸/⑵n/❹",
-// https://malrad.fo/stavsetingarordabokin?_search=*un
-"❷❸/m/❹❸/n/❹❶":"❷❸/⑴u/❹❸/n/❹❶",
+"❷❸/m/❹❸/n/❹❶":"❷❸/⑴u/❹❸/⑴n/❹❶",
 // n
-"❸/n/❹❸/k/❹":"❸/⑴ŋ/❹❸/k/❹",
-"❸/n̥/❹❸/k/❹":"❸/⑴ŋ̊/❹❸/k/❹",
-"❶/ai/❷❸/n/❹❸":"❶/ai/❷❸/⑴ɲ/❹❸",
-"❶/ʊʏ/❷❸/n/❹❸":"❶/ʊʏ/❷❸/⑴ɲ/❹❸",
-"❶/ai/❷❸/n̥/❹❸":"❶/ai/❷❸/⑴ɲ̊/❹❸",
-"❶/ʊʏ/❷❸/n̥/❹❸":"❶/ʊʏ/❷❸/⑴ɲ̊/❹❸",
-"❸/n/❹❸/t͡ʃ":"❸/⑴ɲ/❹❸/t͡ʃ",
-"❸/n̥/❹❸/t͡ʃ":"❸/⑴ɲ̊/❹❸/t͡ʃ",
-"❶/ai/❷❸/nː/❹":"❶/ai/❷❸/⑴t/❹❸/n/❹",
-"❶/ɔi/❷❸/nː/❹":"❶/ɔi/❷❸/⑴t/❹❸/n/❹",
+"❸/n/❹❸/k/❹":"❸/⑴ŋ/❹❸/⑴k/❹",
+"❸/n̥/❹❸/k/❹":"❸/⑴ŋ̊/❹❸/⑴k/❹",
+"❸/n/❹❸/t͡ʃ":"❸/⑴ɲ/❹❸/⑴t͡ʃ",
+"❸/n̥/❹❸/t͡ʃ":"❸/⑴ɲ̊/❹❸/⑴t͡ʃ",
+"❶/ai/❷❸/nː/❹":"❶/⑴ai/❷❸/⑴t/❹❸/⑴n/❹",
+"❶/ɔi/❷❸/nː/❹":"❶/⑴ɔi/❷❸/⑴t/❹❸/⑴n/❹",
 // r
-"❸/ɹ/❹❸/n/❹":"❸/⑴t/❹❸/n/❹",
+"❸/ɹ/❹❸/n/❹":"❸/⑴t/❹❸/⑴n/❹",
 "❸/ɹ/❹❸/n/❹❶/ɪ/❷❸/ɹ/❹":"❸/⑵n/❹❶/ɪ/❷❸/ɹ/❹",
 "❸/ɹ/❹❸/n/❹❶/a/❷❸/ɹ/❹":"❸/⑵n/❹❶/a/❷❸/ɹ/❹",
 // except adjectives of https://malrad.fo/stavsetingarordabokin?_search=*rin > *rnar > [ɹnar]
@@ -324,12 +371,12 @@ Might not be accurate for non-native loan words."></textarea>
 "❸/ɹ̥/❹❸/t/❹":"❸/⑴ɻ̊/❹❸/⑴ʈ/❹",
 "❸/ɹ/❹❸/l/❹":"❸/⑴ɻ/❹❸/⑴ɭ/❹",
 // s
-"❶/ʊi/❷❸/s/❹":"❶/ʊi/❷❸/⑴ʃ/❹",
-"❶/ai/❷❸/s/❹":"❶/ai/❷❸/⑴ʃ/❹",
-"❶/ɔi/❷❸/s/❹":"❶/ɔi/❷❸/⑴ʃ/❹",
-"❶/ʊi/❷❸ⓗ/t/❹❸/s/❹❸/l/❹":"❶/ʊi/❷❸/⑴ʃ/❹❸/⑴l/❹",
-"❶/ai/❷❸ⓗ/t/❹❸/s/❹❸/l/❹":"❶/ai/❷❸/⑴ʃ/❹❸/⑴l/❹",
-"❶/ɔi/❷❸ⓗ/t/❹❸/s/❹❸/l/❹":"❶/ɔi/❷❸/⑴ʃ/❹❸/⑴l/❹",
+"❶/ʊi/❷❸/s/❹":"❶/⑴ʊ/❷❸/⑴ʃ/❹",
+"❶/ai/❷❸/s/❹":"❶/⑴a/❷❸/⑴ʃ/❹",
+"❶/ɔi/❷❸/s/❹":"❶/⑴ɔ/❷❸/⑴ʃ/❹",
+"❶/ʊi/❷❸ⓗ/t/❹❸/s/❹❸/l/❹":"❶/⑴ʊ/❷❸/⑴ʃ/❹❸/⑴l/❹",
+"❶/ai/❷❸ⓗ/t/❹❸/s/❹❸/l/❹":"❶/⑴a/❷❸/⑴ʃ/❹❸/⑴l/❹",
+"❶/ɔi/❷❸ⓗ/t/❹❸/s/❹❸/l/❹":"❶/⑴ɔ/❷❸/⑴ʃ/❹❸/⑴l/❹",
 // v
 "❶/a/❷❸/v/❹❸/n/❹":"❶/a/❷❶/⑴u/❷❸/n/❹",
 "❶/ɛ/❷❸/v/❹❸/n/❹":"❶/ɛ/❷❶/⑴u/❷❸/n/❹",
@@ -350,48 +397,58 @@ Might not be accurate for non-native loan words."></textarea>
 "❶/a/❷❸/⑴ŋ":"❶/⑴ɛ/❷❸/⑴ŋ", 
 "❶/a/❷❸/⑴ɲ":"❶/⑴ɛ/❷❸/⑴ɲ", 
 // í
-"❶/ʊi/❷❸/t͡ʃ":"❶/⑴ʊ/❷❸/t͡ʃ",
-"❶/ʊi/❷❸ⓗ/t͡ʃ":"❶/⑴ʊ/❷❸ⓗ/t͡ʃ",
-"❶/ʊi/❷❸/ʃ":"❶/⑴ʊ/❷❸/ʃ",
+"❶/ʊi/❷❸/t͡ʃ":"❶/⑴ʊ/❷❸/⑴t͡ʃ",
+"❶/ʊi/❷❸ⓗ/t͡ʃ":"❶/⑴ʊ/❷❸ⓗ/⑴t͡ʃ",
+"❶/ʊi/❷❸/ʃ":"❶/⑴ʊ/❷❸/⑴ʃ",
 "❶/ʊi/❷❸/⑴ʃ":"❶/⑴ʊ/❷❸/⑴ʃ",
 "❶/ʊi/❷❸/⑴ʂ":"❶/⑴ʊ/❷❸/⑴ʂ",
 // ó
-"❶/œ/❷❸/k/❹❸/v/❹":"❶/⑴ɛ/❷❸/k/❹❸/v/❹",
+"❶/œ/❷❸/k/❹❸/v/❹":"❶/⑴ɛ/❷❸/⑴k/❹❸/⑴v/❹",
 // ú
-"❶/ʏ/❷❸/k/❹❸/v/❹":"❶/⑴ɪ/❷❸/k/❹❸/v/❹",
+"❶/ʏ/❷❸/k/❹❸/v/❹":"❶/⑴ɪ/❷❸/⑴k/❹❸/⑴v/❹",
 // ei
-"❶/ai/❷❸/⑴ɲ/❹":"❶/⑴ɔ/❷❸/⑴ɲ/❹",
-"❶/ai/❷❸/t͡ʃ":"❶/⑴a/❷❸/t͡ʃ",
-"❶/ai/❷❸ⓗ/t͡ʃ":"❶/⑴a/❷❸ⓗ/t͡ʃ",
+"❶/ai/❷❸/⑴ɲ/❹❸/⑴t͡ʃ":"❶/⑴ɔ/❷❸/⑴ɲ/❹❸/⑴t͡ʃ",
+"❶/ai/❷❸/⑴ɲ̊/❹❸/⑴t͡ʃ":"❶/⑴ɔ/❷❸/⑴ɲ̊/❹❸/⑴t͡ʃ",
+"❶/ai/❷❸/t͡ʃ":"❶/⑴a/❷❸/⑴t͡ʃ",
+"❶/ai/❷❸ⓗ/t͡ʃ":"❶/⑴a/❷❸ⓗ/⑴t͡ʃ",
 // oy
-"❶/ɔi/❷❸/t͡ʃ":"❶/⑴ɔ/❷❸/t͡ʃ",
-"❶/ɔi/❷❸ⓗ/t͡ʃ":"❶/⑴ɔ/❷❸ⓗ/t͡ʃ",
+"❶/ɔi/❷❸/t͡ʃ":"❶/⑴ɔ/❷❸/⑴t͡ʃ",
+"❶/ɔi/❷❸ⓗ/t͡ʃ":"❶/⑴ɔ/❷❸ⓗ/⑴t͡ʃ",
 "❶/ɔi/❷❸/⑴ɹ":"❶/⑴ɔ/❷❸/⑴ɹ",
 "❶/ɔi/❷❸/⑴ɻ":"❶/⑴ɔ/❷❸/⑴ɻ",
 "❶/ɔi/❷❸/⑴ʂ":"❶/⑴ɔ/❷❸/⑴ʂ",
 	},
+// -skt
 	{
-"❷*/s/❹❸/k/❹❸/t/❹":"⑫*/⑵k/❹❸/⑵s/❹❸/⑵t/❹",
+"❷*/s/❹❸/k/❹❸/t/❹":"⑫*/⑴k/❹❸/⑵s/❹❸/⑵t/❹",
+	},
+// adj. & p.p. ending a i u s t an ar ari in ir ið um ur
+	{
+"❷❸/k/❹❸/n/❹❶":"❷❸/⑵[k|t]/❹❸/⑵n/❹❶",
+"ˈ❶/ʊ/❷❸/m/❹":"ˈ❶/ʊ/❷❸/m/❹",
+"ˌ❶/ʊ/❷❸/m/❹":"ˌ❶/ʊ/❷❸/m/❹",
+"❶/ʊ/❷❸/m/❹":"❶/ʊ/❷❸/⑵n/❹",
+
+// https://malrad.fo/stavsetingarordabokin?_search=*un
 	},
 	{
 "⑫*❶":"㉒*❶",
 	},
 	{
-"㉒*/⑵k/❹❸/⑵s/❹❸/⑵t/❹":"❷*❸/⑴s/❹❸/⑵t/❹",
+"㉒*/⑴k/❹❸/⑵s/❹❸/⑵t/❹":"❷*❸/⑵s/❹❸/⑵t/❹",
 	},
 	{
 "⑫":"❷",
 	},
-	{
-
-	},
 
 // clear symbols
 	{
-"⑴*/":"<span class='n1'>*</span>", "⑵*/":"<span class='n2'>*</span>", "⑶*/":"<span class='n3'>*</span>",
+"⑴*/":"<span class='n1'>*</span>", "⑵*/":"<span class='n2'>*</span>", 
+"⑶*/":"<span class='n3'>*</span>", "⒤*⒥":"<span class='ir'>*</span>",
+"⒪*⒫":"<span class='op'>*</span>",
 	},
 	{
-"ⓗ":"ʰ", "ⓙ":"", "/":"", "</":"</", "❶":"", "❷":"", "❸":"", "❹":"", 
+"ⓗ":"ʰ", "ⓙ":"", "/":"", "</":"</", "|":"/", "❶":"", "❷":"", "❸":"", "❹":"", 
 	},
 
 ];
