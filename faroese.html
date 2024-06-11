@@ -443,16 +443,21 @@ Inaccuracies can possibly occur for non-native loan words."></textarea>
 
 // clear symbols
 	{
+"ⓗ":"ʰ", "ⓙ":"", "/":"", "</":"</", "|":"/", "❶":"", "❷":"", "❸":"", "❹":"", 
+	},
+
+	];
+
+	const ignoredWords = [
+"⑴", "⑵", "⑶", "⒤", "⒥", "⒪", "⒫", 
+	]; 
+	const nonIgnoredRulesList = [
+	{
 "⑴*/":"<span class='n1'>*</span>", "⑵*/":"<span class='n2'>*</span>", 
 "⑶*/":"<span class='n3'>*</span>", "⒤*⒥":"<span class='ir'>*</span>",
 "⒪*⒫":"<span class='op'>*</span>",
 	},
-	{
-"ⓗ":"ʰ", "ⓙ":"", "/":"", "</":"</", "|":"/", "❶":"", "❷":"", "❸":"", "❹":"", 
-	},
-
-];
-
+	]
     </script>
 <script src="conv-div-button.js"></script>
 </body>
