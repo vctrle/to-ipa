@@ -449,16 +449,32 @@ Inaccuracies can possibly occur for non-native loan words."></textarea>
 	];
 
 	const ignoredWords = [
-"⑴", "⑵", "⑶", "⒤", "⒥", "⒪", "⒫", 
+	
+"⑴", "⑵", "⑶", "⒤", "⒪",
+
 	]; 
+
 	const nonIgnoredRulesList = [
+	
 	{
-"⑴*/":"<span class='n1'>*</span>", "⑵*/":"<span class='n2'>*</span>", 
-"⑶*/":"<span class='n3'>*</span>", "⒤*⒥":"<span class='ir'>*</span>",
-"⒪*⒫":"<span class='op'>*</span>",
+"/*⑴/":"/<span class='n1'>*</span>/", "/*⑵/":"/<span class='n2'>*</span>/", 
+"/*⑶/":"/<span class='n3'>*</span>/", 
 	},
+	
+	];
+	
+	const nonIgnoredRulesList = [
+	
+	{
+"⒤*/":"<span class='ir'>*</span>/", "⒪*/":"<span class='op'>*</span>/",
+	},
+	{
+"</":"</", "/":"", "|":"/",
+	},
+	
 	]
+
     </script>
-<script src="conv-div-button.js"></script>
+<script src="https://vctrle.github.io/to-ipa/conv-div-button-skipword.js"></script>
 </body>
 </html>
