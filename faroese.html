@@ -75,6 +75,14 @@ Inaccuracies can possibly occur for non-native loan words."></textarea>
 	function processText() {
 		let textArea = document.getElementById('inputArea');
 		let text = textArea.value;
+		text = text.replace(/aQ/g, 'á');
+		text = text.replace(/dQ/g, 'ð');
+		text = text.replace(/iQ/g, 'í');
+		text = text.replace(/oQ/g, 'ó');
+		text = text.replace(/uQ/g, 'ú');
+		text = text.replace(/yQ/g, 'ý');
+		text = text.replace(/aeQ/g, 'æ');
+		text = text.replace(/oeQ/g, 'ø');
 		text = text.replace(/,([A-Za-zÀ-ÿ])/g, 'ˌ$1');
 		let words = text.split(/([^A-Za-zÀ-ÿˈˌ]+)/);
 		let processedText = '';
@@ -91,15 +99,21 @@ Inaccuracies can possibly occur for non-native loan words."></textarea>
 
 	const conversionRulesList = [
 
+	{
+"aq":"", "dq":"", "iq":"", "":"", "":"", "":"", "":"", "":"", 	
+	},
 // IRREGULAR 
 	{
 "hvussu":"kussu", "aftur":"attur", "eftir":"ettir", "lyft":"lytt", "hugna":"hunna", 
-"ella":"illa", "hjálp":"jálp", "hjálpt":"jált", "hjart":"jart", "hjørt":"hjørt", "vilhjálmur":"viljálmur", 
+"ella":"illa", "hjálp":"jálp", "hjálpt":"jált", "hjart":"jart", "hjørt":"hørt", "vilhjálmur":"viljálmur", 
 "løgdu":"løddu", "søgdu":"søddu", "dugdi":"duddi", "dugdu":"duddu", "plagdi":"pladdi", 
 "plagdu":"pladdu", "tinna":"tidna", "torn":"tʰɔɹn", "ørn":"œɹn", "tórshavn":"tovrshavn",
-//"skinu":"sk❶iⓐ❷nu", "skinið":"sk❶iⓐ❷nið", "høvd":"hødd", "høvdu":"høddu", "føroy":"føri", 
-"ˌlend":"ˌlen", "":"", "":"", "":"", "":"", 
+"skinu":"s❸g❹inu", "skinið":"s❸g❹inið", "høvd":"hødd", "høvdu":"høddu", "føroy":"føri", 
+"ˌlend":"ˌlen", "ˈandlit":"ˈ/anˌlit", "dreingir":"dr❶a❷ngir", "engilsk":"❶a❷ngilsk", "einkja":"❶a❷nkja", 
+"leingi":"l❶a❷ngi", "":"", "":"", "":"", "":"", 
 "":"", "":"", "":"", "":"", "":"", 
+"":"", "":"", "":"", "":"", "":"", 
+
 // glide irreg.
 "æða":"æva", "røða":"røva", "støða":"støva", "lega":"leva", "tæga":"tæva", 
 "":"", "":"", "":"", "":"", "":"", 
@@ -125,9 +139,6 @@ Inaccuracies can possibly occur for non-native loan words."></textarea>
 	},
 
 // STRESS and VOWEL LENGTH
-	{
-"ˈ":"ˈ", "ˈ":"ˈ", "ˌ":"ˌ", "ˌ":"ˌ", 
-	},
 	{
 "ˈ❶*❷":"ˈ❶ⓐ*❷","ˌ❶*❷":"ˌ❶ⓑ*❷",
 	},
@@ -392,10 +403,10 @@ Inaccuracies can possibly occur for non-native loan words."></textarea>
 // ú
 "❶/ʏ/❷❸/k/❹❸/v/❹":"❶/ɪ/❷❸/k/❹❸/v/❹",
 // ei
-"❶/ai/❷❸/ɲ/❹❸/t͡ʃ":"❶/ɔ/❷❸/ɲ/❹❸/t͡ʃ",
-"❶/ai/❷❸/ɲ̊/❹❸/t͡ʃ":"❶/ɔ/❷❸/ɲ̊/❹❸/t͡ʃ",
 "❶/ai/❷❸/t͡ʃ":"❶/a/❷❸/t͡ʃ",
 "❶/ai/❷❸ⓗ/t͡ʃ":"❶/a/❷❸ⓗ/t͡ʃ",
+"❶/ai/❷❸/ɲ/❹❸/t͡ʃ":"❶/ɔ/❷❸/ɲ/❹❸/t͡ʃ",
+"❶/ai/❷❸/ɲ̊/❹❸/t͡ʃ":"❶/ɔ/❷❸/ɲ̊/❹❸/t͡ʃ",
 // oy
 "❶/ɔi/❷❸/t͡ʃ":"❶/ɔ/❷❸/t͡ʃ",
 "❶/ɔi/❷❸ⓗ/t͡ʃ":"❶/ɔ/❷❸ⓗ/t͡ʃ",
@@ -417,6 +428,7 @@ Inaccuracies can possibly occur for non-native loan words."></textarea>
 // -skt
 	{
 "❷*❸/s/❹❸/k/❹❸/t/❹":"⑫*❸/k/❹❸/s/❹❸/t/❹",
+"❷*❸/ʃ/❹❸/k/❹❸/t/❹":"⑫*❸/k/❹❸/ʃ/❹❸/t/❹",
 	},
 	{
 "⑫*❶":"㉒*❶", 
@@ -426,11 +438,11 @@ Inaccuracies can possibly occur for non-native loan words."></textarea>
 	},
 	{
 "㉒*❸/k/❹❸/s/❹❸/t/❹":"❷*❸/s/❹❸/t/❹",
+"㉒*❸/k/❹❸/ʃ/❹❸/t/❹":"❷*❸/ʃ/❹❸/t/❹",
 	},
 	{
-"⑫":"❷", "❸/n̥/❹❸/k/❹":"❸/ŋ̊/❹❸/k/❹",
+"⑫":"❷", "❸/n̥/❹❸/k/❹":"❸/ŋ̊/❹❸/k/❹", "❸/k/❹❸/ʃ/❹":"❸/k/❹❸/s/❹",
 	},
-
 // clear symbols
 	{
 "ⓗ":"ʰ", "ⓙ":"", "❶":"", "❷":"", "❸":"", "❹":"",  "/":"", "|":"/",
