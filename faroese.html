@@ -67,14 +67,6 @@ Inaccuracies can possibly occur for non-native loan words."></textarea>
 	function processText() {
 		let textArea = document.getElementById('inputArea');
 		let text = textArea.value;
-		text = text.replace(/aQ/g, 'á');
-		text = text.replace(/dQ/g, 'ð');
-		text = text.replace(/iQ/g, 'í');
-		text = text.replace(/oQ/g, 'ó');
-		text = text.replace(/uQ/g, 'ú');
-		text = text.replace(/yQ/g, 'ý');
-		text = text.replace(/aeQ/g, 'æ');
-		text = text.replace(/oeQ/g, 'ø');
 		text = text.replace(/,([A-Za-zÀ-ÿ])/g, 'ˌ$1');
 		let words = text.split(/([^A-Za-zÀ-ÿˈˌ]+)/);
 		let processedText = '';
