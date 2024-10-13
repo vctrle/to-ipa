@@ -51,7 +51,7 @@
         };
 
         const northernConsonants = {
-            'b':'ɓ', 'd':'z', 'h':'h', 'l':'l', 'm':'m', 'n':'n', 'p':'p', 'r':'z', 's':'s', 't':'t', 'v':'v', 'x':'s', 'đ':'ɗ', 'tr':'tɕ', 'th':'tʰ', 'ch':'tɕ', 'ph':'f', 'nh':'ɲ', 'kh':'x', 'gi':'z', 'qu':'kʷ', 'ng':'ŋ', 'ngh':'ŋ', 'g':'ɣ', 'gh':'ɣ', 'c':'k', 'k':'k'
+            'b':'ɓ', 'd':'z', 'h':'h', 'l':'l', 'm':'m', 'n':'n', 'p':'p', 'r':'z', 's':'s', 't':'t', 'v':'v', 'x':'s', 'đ':'ɗ', 'tr':'tɕ', 'th':'tʰ', 'ch':'tɕ', 'ph':'f', 'nh':'ɲ', 'kh':'x', 'gi':'z', 'qu':'kw', 'ng':'ŋ', 'ngh':'ŋ', 'g':'ɣ', 'gh':'ɣ', 'c':'k', 'k':'k'
         };
 
         const southernConsonants = {
@@ -59,11 +59,11 @@
         };
 
         const northernVowels = {
-            'a':'a', 'ă':'ă', 'â':'ə̆', 'e':'ɛ', 'ê':'e', 'i':'i', 'o':'ɔ', 'ô':'o', 'ơ':'ə', 'u':'u', 'ư':'ɨ', 'y':'i', 'iê':'iə̆', 'oa':'ʷa', 'oă':'ʷă', 'oe':'ʷɛ', 'oo':'ɔ', 'ôô':'o', 'uâ':'ʷə̆', 'uê':'ʷe', 'uô':'uə̆', 'uy':'ʷi', 'ươ':'ɨə̆', 'uyê':'ʷiə̆', 'yê':'jə̆'
+            'a':'a', 'ă':'ă', 'â':'ə̆', 'e':'ɛ', 'ê':'e', 'i':'i', 'o':'ɔ', 'ô':'o', 'ơ':'ə', 'u':'ʊw', 'ư':'ɨ', 'y':'i', 'iê':'iə̆', 'oa':'wa', 'oă':'wă', 'oe':'wɛ', 'oo':'ɔ', 'ôô':'o', 'uâ':'wə̆', 'uê':'we', 'uô':'uə̆', 'uy':'wi', 'ươ':'ɨə̆', 'uyê':'wiə̆', 'yê':'jə̆'
         };
 
         const southernVowels = {
-            'a':'a', 'ă':'ă', 'â':'ə̆', 'e':'ɛ', 'ê':'e', 'i':'i', 'o':'ɔ', 'ô':'o', 'ơ':'ə', 'u':'u', 'ư':'ɨ', 'y':'i', 'iê':'i', 'oa':'ʷa', 'oă':'ʷă', 'oe':'ʷɛ', 'oo':'ɔ', 'ôô':'o', 'uâ':'ʷɨ', 'uê':'ʷe', 'uô':'u', 'uy':'ʷi', 'ươ':'ɨ', 'uyê':'ʷi', 'yê':'i'
+            'a':'a', 'ă':'ă', 'â':'ə̆', 'e':'ɛ', 'ê':'e', 'i':'i', 'o':'ɔ', 'ô':'o', 'ơ':'ə', 'u':'ʊw', 'ư':'ɨ', 'y':'i', 'iê':'i', 'oa':'wa', 'oă':'wă', 'oe':'wɛ', 'oo':'ɔ', 'ôô':'o', 'uâ':'wɨ', 'uê':'we', 'uô':'u', 'uy':'wi', 'ươ':'ɨ', 'uyê':'wi', 'yê':'i'
         };
 
         const northernFinals = {
@@ -75,11 +75,11 @@
         };
 	    
 	const northernExceptions = {
-	    'au':'ăw', 'ay':'ăj', 'anh':'ăjŋ', 'ach':'ăjk', 'ênh':'ə̆jŋ', 'êch':'ə̆jk', 'ong':'ăwŋ͡m', 'ông':'ə̆wŋ͡m', 'oc':'ăwk͡p', 'ôc':'ə̆wk͡p', 'ung':'uŋ͡m', 'uc':'uk͡p', 'oay':'ʷăj', 'oanh':'ʷăjŋ', 'oach':'ʷăjk', 'uênh':'ʷə̆jŋ', 'uêch':'ʷə̆jk', "ich":"ïk", "inh":"ïŋ"
+	    'au':'ăw', 'ay':'ăj', 'anh':'ăjŋ', 'ach':'ăjk', 'ênh':'ə̆jŋ', 'êch':'ə̆jk', 'ong':'ăwŋ͡m', 'ông':'ə̆wŋ͡m', 'oc':'ăwk͡p', 'ôc':'ə̆wk͡p', 'ung':'uŋ͡m', 'uc':'uk͡p', 'oay':'wăj', 'oanh':'wăjŋ', 'oach':'wăjk', 'uênh':'wə̆jŋ', 'uêch':'wə̆jk', "ich":"ïk", "inh":"ïŋ"
 	};
 	    
         const southernExceptions = {
-            'au':'ăw', 'ay':'ăj', 'anh':'ăn', 'ach':'ăt', 'ên':'ən', 'êng':'ən', 'êch':'ət', 'êc':'ət', 'in':'ɨn', 'inh':'ɨn', 'ich':'ɨt', 'ic':'ɨt', 'ong':'ăwŋ͡m', 'ông':'ə̆wŋ͡m', 'oc':'ăwk͡p', 'ôc':'ə̆wk͡p', 'ung':'uŋ͡m', 'uc':'uk͡p', 'oay':'ʷăj', 'oanh':'ʷăn', 'oach':'ʷăt', 'uênh':'ʷən', 'uêch':'ʷət','uyn':'ʷɨn', 'uynh':'ʷɨn', 'uych':'ʷɨt', 'uyt':'ʷɨt'
+            'au':'ăw', 'ay':'ăj', 'anh':'ăn', 'ach':'ăt', 'ên':'ən', 'êng':'ən', 'êch':'ət', 'êc':'ət', 'in':'ɨn', 'inh':'ɨn', 'ich':'ɨt', 'ic':'ɨt', 'ong':'ăwŋ͡m', 'ông':'ə̆wŋ͡m', 'oc':'ăwk͡p', 'ôc':'ə̆wk͡p', 'ung':'uŋ͡m', 'uc':'uk͡p', 'oay':'wăj', 'oanh':'wăn', 'oach':'wăt', 'uênh':'wən', 'uêch':'wət','uyn':'wɨn', 'uynh':'wɨn', 'uych':'wɨt', 'uyt':'wɨt'
         };
 
         const northernToneMarkers = {
@@ -144,8 +144,8 @@
         }
 		
 		function modifySemivowel(consonant, vowelIPA) {
-			if (consonant === "" && vowelIPA.includes('ʷ')) {
-				return vowelIPA.replace('ʷ', 'w');
+			if (consonant === "" && vowelIPA.includes('w')) {
+				return vowelIPA.replace('w', 'w');
 			}
 			return vowelIPA;
 		}
@@ -230,8 +230,8 @@
 		}
 
 		function modifySemivowel(consonant, vowelIPA) {
-			if (consonant === "" && vowelIPA.includes('ʷ')) {
-				return vowelIPA.replace('ʷ', 'w');
+			if (consonant === "" && vowelIPA.includes('w')) {
+				return vowelIPA.replace('w', 'w');
 			}
 			return vowelIPA;
 		}
